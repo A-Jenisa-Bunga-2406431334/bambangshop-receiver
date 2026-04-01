@@ -1,8 +1,6 @@
 use std::thread;
 use rocket::http::Status;
-use rocket::log;
 use rocket::serde::json::to_string;
-use rocket::tokio;
 use bambangshop_receiver::{APP_CONFIG, REQWEST_CLIENT, Result, compose_error_response};
 use crate::model::notification::Notification;
 use crate::model::subscriber::SubscriberRequest;
@@ -30,7 +28,7 @@ impl NotificationService {
             .header("Accept", "application/json")
             .body(to_string(&payload).unwrap())
             .send().await;
-        log::warn!("Sent subscribe request to: {}", request_url);
+        rocket::warn!("Sent subscribe request to: {}", request_url);
 
         return match request {
             Ok(f) => match f.json::<SubscriberRequest>().await {
@@ -67,7 +65,7 @@ impl NotificationService {
             .header("Content-Type", "application/json")
             .header("Accept", "application/json")
             .send().await;
-        log::warn!("Sent unsubscribe request to: {}", request_url);
+        rocket::warn!("Sent unsubscribe request to: {}", request_url);
 
         return match request {
             Ok(f) => match f.json::<SubscriberRequest>().await {
